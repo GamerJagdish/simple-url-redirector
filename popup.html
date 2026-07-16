@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple URL Redirector</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="head">
+    <div class="brand">Simple URL Redirector</div>
+  </div>
+
+  <div class="row">
+    <div class="row-label">
+      Active
+      <span class="count" id="ruleCount">0 rules active</span>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="masterToggle" />
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div id="emptyState" class="empty" style="display:none;">
+    No rules yet. Add a URL pair to start redirecting.
+  </div>
+
+  <div class="rules-section">
+    <div class="add-row">
+      <div class="add-row-top">
+        <div class="toggle-advanced">
+          <span>Simple</span>
+          <label class="mini-switch">
+            <input type="checkbox" id="advancedToggle">
+            <span class="mini-slider"></span>
+          </label>
+          <span>Advanced</span>
+        </div>
+      </div>
+      <div id="simpleInputs" class="add-row-inputs">
+        <input type="text" id="fromInput" placeholder="From, e.g. redditez.com" />
+        <span class="arrow">to</span>
+        <input type="text" id="toInput" placeholder="To, e.g. reddit.com" />
+      </div>
+      <div id="advancedInputs" class="advanced-row-inputs" style="display:none;">
+        <input type="text" id="regexFromInput" placeholder="From regex, e.g. ^https://(www\\.)?redditez\\.com" />
+        <input type="text" id="regexToInput" placeholder="To substitution, e.g. https://reddit.com" />
+      </div>
+      <button class="add" id="addBtn">Add rule</button>
+    </div>
+
+    <ul id="ruleList"></ul>
+
+    <button class="secondary" id="openOptions">Full view</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Rules</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <h1>URL Redirect Rules</h1>
+    </header>
+
+    <div class="panel">
+      <div class="add-row">
+        <div class="add-row-top">
+          <div class="toggle-advanced">
+            <span>Simple</span>
+            <label class="mini-switch">
+              <input type="checkbox" id="advancedToggle">
+              <span class="mini-slider"></span>
+            </label>
+            <span>Advanced</span>
+          </div>
+          <button class="add" id="addBtn">Add rule</button>
+        </div>
+        <div id="simpleInputs" class="add-row-inputs">
+          <input type="text" id="fromInput" placeholder="From, e.g. redditez.com" />
+          <span class="arrow">to</span>
+          <input type="text" id="toInput" placeholder="To, e.g. reddit.com" />
+        </div>
+        <div id="advancedInputs" class="advanced-row-inputs" style="display:none;">
+          <input type="text" id="regexFromInput" placeholder="From regex, e.g. ^https://(www\\.)?redditez\\.com" />
+          <input type="text" id="regexToInput" placeholder="To substitution, e.g. https://reddit.com" />
+        </div>
+      </div>
+      <ul id="ruleList"></ul>
+      <div class="empty" id="emptyMsg" style="display:none;">No rules yet. Add your first URL pair above.</div>
+    </div>
+
+    <p class="note">
+      Simple mode matches the whole domain, ignoring leading "www.". Advanced mode uses regex syntax for matching and
+      substitution.
+    </p>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+
+</html>
