@@ -23,7 +23,7 @@ It works two ways at once:
 ## Installation
 
 1. Click download below to get the zip file.
-2. [![UPI-MCC-Checker Stable](https://img.shields.io/github/release/gamerjagdish/simple-url-replacer.svg?maxAge=3600&display_name=release&label=Download%20App&labelColor=06599d&color=043b69&style=for-the-badge)](https://github.com/gamerjagdish/simple-url-replacer/releases)
+2. [![Simple URL Redirector](https://img.shields.io/github/release/gamerjagdish/simple-url-replacer.svg?maxAge=3600&display_name=release&label=Download%20App&labelColor=06599d&color=043b69&style=for-the-badge)](https://github.com/gamerjagdish/simple-url-replacer/releases)
 3. Unzip this folder somewhere permanent (don't delete it after installing; Chrome loads it from disk).
 4. Open `chrome://extensions` in Chrome.
 5. Turn on Developer mode (top right).
