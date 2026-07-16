@@ -35,18 +35,15 @@ jobs:
           
           if [ -z "$LATEST_TAG" ]; then
             # If no previous tag, get all commits
-            CHANGELOG=$(git log --oneline --pretty=format:"- %s (%h)")
+            CHANGELOG=$(git log --format="* %s (%h)%n%b")
           else
             # Get commits since last tag
-            CHANGELOG=$(git log ${LATEST_TAG}..HEAD --oneline --pretty=format:"- %s (%h)")
+            CHANGELOG=$(git log ${LATEST_TAG}..HEAD --format="* %s (%h)%n%b")
           fi
           
-          # Escape newlines for GitHub Actions
-          CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-          
-          echo "changelog=$CHANGELOG" >> "$GITHUB_OUTPUT"
+          echo "changelog<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CHANGELOG" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Package extension
         run: |
