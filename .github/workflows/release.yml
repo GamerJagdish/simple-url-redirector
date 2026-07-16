@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Read version from manifest.json
         id: get-version
@@ -24,6 +26,27 @@ jobs:
             const manifest = JSON.parse(fs.readFileSync('./manifest.json', 'utf8'));
             return manifest.version;
           result-encoding: string
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the latest tag (if any)
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LATEST_TAG" ]; then
+            # If no previous tag, get all commits
+            CHANGELOG=$(git log --oneline --pretty=format:"- %s (%h)")
+          else
+            # Get commits since last tag
+            CHANGELOG=$(git log ${LATEST_TAG}..HEAD --oneline --pretty=format:"- %s (%h)")
+          fi
+          
+          # Escape newlines for GitHub Actions
+          CHANGELOG="${CHANGELOG//'%'/'%25'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+          
+          echo "changelog=$CHANGELOG" >> "$GITHUB_OUTPUT"
 
       - name: Package extension
         run: |
@@ -47,7 +70,11 @@ jobs:
           files: dist/simple-url-redirector.zip
           tag_name: v${{ steps.get-version.outputs.result }}
           name: Release v${{ steps.get-version.outputs.result }}
-          generate_release_notes: true
+          body: |
+            ## What's Changed
+            ${{ steps.changelog.outputs.changelog }}
+            
+            Full Changelog: https://github.com/${{ github.repository }}/commits/v${{ steps.get-version.outputs.result }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

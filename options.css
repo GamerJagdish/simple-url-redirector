@@ -1,4 +1,4 @@
-﻿:root {
+:root {
       --ink: #14171c;
       --panel: #1b1f27;
       --panel-2: #20242d;
@@ -110,6 +110,23 @@
       filter: brightness(1.08);
     }
 
+    button.secondary {
+      padding: 9px 14px;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button.secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .toggle-advanced {
       display: flex;
       align-items: center;
@@ -131,7 +148,7 @@
 
     .rule {
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: auto 1fr auto auto;
       gap: 10px;
       align-items: center;
       padding: 12px 16px;
@@ -224,6 +241,10 @@
       font-size: 14px;
       line-height: 1;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
     }
 
     button.remove:hover {
@@ -243,4 +264,57 @@
       font-size: 12px;
       color: var(--muted);
       line-height: 1.6;
+    }
+
+    button.edit {
+      background: transparent;
+      border: 1px solid var(--panel-border);
+      color: var(--accent);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    button.edit:hover {
+      background: rgba(108, 142, 245, 0.1);
+      border-color: var(--accent);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--panel-2);
+      border: 1px solid var(--panel-border);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 8px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+
+    .undo-btn {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 600;
+      padding: 0;
+      font-size: 13px;
+    }
+
+    .undo-btn:hover {
+      text-decoration: underline;
     }

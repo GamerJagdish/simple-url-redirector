@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -48,12 +48,20 @@
         <input type="text" id="regexFromInput" placeholder="From regex, e.g. ^https://(www\\.)?redditez\\.com" />
         <input type="text" id="regexToInput" placeholder="To substitution, e.g. https://reddit.com" />
       </div>
-      <button class="add" id="addBtn">Add rule</button>
+      <div style="display:flex; gap:8px; margin-top: 8px;">
+        <button class="secondary" id="cancelEditBtn" style="display: none; margin-top: 0; flex: 1;">Cancel</button>
+        <button class="add" id="addBtn" style="margin-top: 0; flex: 1;">Add rule</button>
+      </div>
     </div>
 
     <ul id="ruleList"></ul>
 
     <button class="secondary" id="openOptions">Full view</button>
+  </div>
+
+  <div id="toast" class="toast" style="display:none;">
+    <span id="toastMsg">Rule deleted.</span>
+    <button id="undoBtn" class="undo-btn">Undo</button>
   </div>
 
   <script src="popup.js"></script>

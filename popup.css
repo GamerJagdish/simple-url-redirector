@@ -1,4 +1,4 @@
-﻿:root {
+:root {
       --ink: #14171c;
       --panel: #1b1f27;
       --panel-border: #2a2f3a;
@@ -237,7 +237,7 @@
 
     .rule {
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: auto 1fr auto auto;
       gap: 8px;
       align-items: center;
       padding: 10px 12px;
@@ -326,9 +326,68 @@
       font-size: 14px;
       line-height: 1;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
     }
 
     button.remove:hover {
       background: rgba(242, 121, 90, 0.1);
       border-color: var(--danger);
+    }
+
+    button.edit {
+      background: transparent;
+      border: 1px solid var(--panel-border);
+      color: var(--accent);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    button.edit:hover {
+      background: rgba(108, 142, 245, 0.1);
+      border-color: var(--accent);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink);
+      border: 1px solid var(--panel-border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      z-index: 1000;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .undo-btn {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 600;
+      padding: 0;
+      font-size: 12px;
+    }
+
+    .undo-btn:hover {
+      text-decoration: underline;
     }

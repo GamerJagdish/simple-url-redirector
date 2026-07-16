@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -24,7 +24,10 @@
             </label>
             <span>Advanced</span>
           </div>
-          <button class="add" id="addBtn">Add rule</button>
+          <div style="display:flex; gap:8px;">
+            <button class="secondary" id="cancelEditBtn" style="display: none;">Cancel</button>
+            <button class="add" id="addBtn">Add rule</button>
+          </div>
         </div>
         <div id="simpleInputs" class="add-row-inputs">
           <input type="text" id="fromInput" placeholder="From, e.g. redditez.com" />
@@ -44,6 +47,11 @@
       Simple mode matches the whole domain, ignoring leading "www.". Advanced mode uses regex syntax for matching and
       substitution.
     </p>
+  </div>
+
+  <div id="toast" class="toast" style="display:none;">
+    <span id="toastMsg">Rule deleted.</span>
+    <button id="undoBtn" class="undo-btn">Undo</button>
   </div>
 
   <script src="options.js"></script>

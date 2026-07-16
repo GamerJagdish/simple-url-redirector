@@ -8,6 +8,48 @@ const emptyMsg = document.getElementById("emptyMsg");
 const advancedToggle = document.getElementById("advancedToggle");
 const simpleInputs = document.getElementById("simpleInputs");
 const advancedInputs = document.getElementById("advancedInputs");
+const toast = document.getElementById("toast");
+const undoBtn = document.getElementById("undoBtn");
+const cancelEditBtn = document.getElementById("cancelEditBtn");
+
+let editingIndex = -1;
+let undoTimeout = null;
+let deletedRule = null;
+let deletedIndex = -1;
+
+undoBtn.addEventListener("click", () => {
+  if (deletedRule) {
+    chrome.storage.sync.get(["rules"], (data) => {
+      const rules = Array.isArray(data.rules) ? data.rules : [];
+      rules.splice(deletedIndex, 0, deletedRule);
+      saveRules(rules);
+      hideToast();
+    });
+  }
+});
+
+function showToast() {
+  toast.style.display = "flex";
+  clearTimeout(undoTimeout);
+  undoTimeout = setTimeout(hideToast, 5000);
+}
+
+function hideToast() {
+  toast.style.display = "none";
+  deletedRule = null;
+}
+
+function resetEditMode() {
+  editingIndex = -1;
+  addBtn.textContent = "Add rule";
+  cancelEditBtn.style.display = "none";
+  fromInput.value = "";
+  toInput.value = "";
+  regexFromInput.value = "";
+  regexToInput.value = "";
+}
+
+cancelEditBtn.addEventListener("click", resetEditMode);
 
 function cleanDomain(value) {
   return value
@@ -68,17 +110,47 @@ function render(rules) {
     fromTo.appendChild(arrow);
     fromTo.appendChild(toEl);
 
+    const editBtn = document.createElement("button");
+    editBtn.className = "edit";
+    editBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>';
+    editBtn.title = "Edit rule";
+    editBtn.addEventListener("click", () => {
+      editingIndex = index;
+      advancedToggle.checked = rule.isRegex;
+      advancedToggle.dispatchEvent(new Event('change'));
+      
+      if (rule.isRegex) {
+        regexFromInput.value = rule.from;
+        regexToInput.value = rule.to;
+      } else {
+        fromInput.value = rule.from;
+        toInput.value = rule.to;
+      }
+      addBtn.textContent = "Save edit";
+      cancelEditBtn.style.display = "block";
+    });
+
     const removeBtn = document.createElement("button");
     removeBtn.className = "remove";
-    removeBtn.textContent = "✕";
+    removeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
     removeBtn.title = "Remove rule";
     removeBtn.addEventListener("click", () => {
+      deletedRule = rules[index];
+      deletedIndex = index;
       rules.splice(index, 1);
       saveRules(rules);
+      showToast();
+      
+      if (editingIndex === index) {
+        resetEditMode();
+      } else if (editingIndex > index) {
+        editingIndex--;
+      }
     });
 
     li.appendChild(toggleWrap);
     li.appendChild(fromTo);
+    li.appendChild(editBtn);
     li.appendChild(removeBtn);
     ruleList.appendChild(li);
   });
@@ -100,14 +172,16 @@ function addRule() {
 
   chrome.storage.sync.get(["rules"], (data) => {
     const rules = Array.isArray(data.rules) ? data.rules : [];
-    rules.push({ from, to, enabled: true, isRegex: isAdvanced });
-    saveRules(rules);
-    if (isAdvanced) {
-      regexFromInput.value = "";
-      regexToInput.value = "";
+    
+    if (editingIndex >= 0 && editingIndex < rules.length) {
+      rules[editingIndex] = { from, to, enabled: rules[editingIndex].enabled, isRegex: isAdvanced };
     } else {
-      fromInput.value = "";
-      toInput.value = "";
+      rules.push({ from, to, enabled: true, isRegex: isAdvanced });
+    }
+    
+    saveRules(rules);
+    resetEditMode();
+    if (!isAdvanced) {
       fromInput.focus();
     }
   });
