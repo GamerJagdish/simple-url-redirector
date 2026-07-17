@@ -17,11 +17,20 @@ function buildSubstitution(toDomain) {
   return `https://${target}\\2`;
 }
 
+let cachedRules = [];
+let cachedEnabled = true;
+let isCacheInitialized = false;
+
 async function getState() {
-  const data = await chrome.storage.sync.get([RULES_KEY, ENABLED_KEY]);
+  if (!isCacheInitialized) {
+    const data = await chrome.storage.sync.get([RULES_KEY, ENABLED_KEY]);
+    cachedRules = Array.isArray(data[RULES_KEY]) ? data[RULES_KEY] : [];
+    cachedEnabled = data[ENABLED_KEY] !== false;
+    isCacheInitialized = true;
+  }
   return {
-    rules: Array.isArray(data[RULES_KEY]) ? data[RULES_KEY] : [],
-    enabled: data[ENABLED_KEY] !== false
+    rules: cachedRules,
+    enabled: cachedEnabled
   };
 }
 
@@ -74,6 +83,13 @@ chrome.runtime.onStartup.addListener(rebuildRules);
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "sync" && (changes[RULES_KEY] || changes[ENABLED_KEY])) {
+    if (changes[RULES_KEY]) {
+      cachedRules = Array.isArray(changes[RULES_KEY].newValue) ? changes[RULES_KEY].newValue : [];
+    }
+    if (changes[ENABLED_KEY]) {
+      cachedEnabled = changes[ENABLED_KEY].newValue !== false;
+    }
+    isCacheInitialized = true;
     rebuildRules();
   }
 });
