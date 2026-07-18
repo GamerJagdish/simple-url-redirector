@@ -31,20 +31,29 @@ jobs:
             return manifest.version;
           result-encoding: string
 
-      - name: Generate changelog
+      - name: Generate changelog and update tag
         id: changelog
         run: |
-          # Get the latest tag (if any)
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          CURRENT_VERSION="v${{ steps.get-version.outputs.result }}"
           
-          if [ -z "$LATEST_TAG" ]; then
+          # Find the previous tag (ignoring the current one if it already exists)
+          PREV_TAG=$(git tag --sort=-v:refname | grep -v "^$CURRENT_VERSION$" | head -n 1)
+          
+          if [ -z "$PREV_TAG" ]; then
             # If no previous tag, get all commits
             CHANGELOG=$(git log --format="* %s (%h)%n%b")
           else
-            # Get commits since last tag
-            CHANGELOG=$(git log ${LATEST_TAG}..HEAD --format="* %s (%h)%n%b")
+            # Get all commits since the previous version tag
+            CHANGELOG=$(git log ${PREV_TAG}..HEAD --format="* %s (%h)%n%b")
           fi
           
+          # Move the current version tag to the latest commit so source code zips update
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -f "$CURRENT_VERSION"
+          git push -f origin "$CURRENT_VERSION"
+          
+          # Output for next step
           echo "changelog<<EOF" >> "$GITHUB_OUTPUT"
           echo "$CHANGELOG" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
