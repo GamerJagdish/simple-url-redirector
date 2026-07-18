@@ -4,7 +4,7 @@
 	</a>
 </div>
 
-# Simple URL Redirector (Chrome Extension)
+# Simple URL Redirector (Browser Extension)
 
 Automatically redirects links from one URL to another, based on rules you define. For example, `redditez.com` to `reddit.com`.
 
@@ -17,10 +17,10 @@ Automatically redirects links from one URL to another, based on rules you define
 </p>
 
 It works two ways at once:
-- Navigation-level redirect via `declarativeNetRequest`: if you click or type a link to a matching URL, Chrome redirects you straight to the target URL, preserving the path, query, and fragment.
+- Navigation-level redirect via `declarativeNetRequest`: if you click or type a link to a matching URL, your browser redirects you straight to the target URL, preserving the path, query, and fragment.
 - On-page rewriting via a content script: links already displayed on a page get their `href` rewritten too, so hovering, copying, or middle-clicking shows the correct destination.
 
-## Installation
+## Installation (Chrome, Chromium-based browsers)
 
 1. Click download below to get the zip file.
 2. [![Simple URL Redirector](https://img.shields.io/github/release/gamerjagdish/simple-url-replacer.svg?maxAge=3600&display_name=release&label=Download%20App&labelColor=06599d&color=043b69&style=for-the-badge)](https://github.com/gamerjagdish/simple-url-replacer/releases)
