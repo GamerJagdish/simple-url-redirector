@@ -61,7 +61,9 @@ jobs:
       - name: Package extension
         run: |
           mkdir -p dist
-          zip -r dist/simple-url-redirector.zip \
+          
+          # 1. Package standard version (with Firefox support)
+          zip -r dist/simple-url-redirector-firefox.zip \
             icons/ \
             background.js \
             content.js \
@@ -74,10 +76,20 @@ jobs:
             popup.js \
             LICENSE
 
+          # 2. Package Chromium/Edge version (strict MV3 without background.scripts)
+          mkdir -p build-chromium
+          cp -r icons background.js content.js manifest.json options.css options.html options.js popup.css popup.html popup.js LICENSE build-chromium/
+          jq 'del(.background.scripts)' build-chromium/manifest.json > build-chromium/manifest_tmp.json && mv build-chromium/manifest_tmp.json build-chromium/manifest.json
+          cd build-chromium
+          zip -r ../dist/simple-url-redirector-chromium.zip *
+          cd ..
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/simple-url-redirector.zip
+          files: |
+            dist/simple-url-redirector-firefox.zip
+            dist/simple-url-redirector-chromium.zip
           tag_name: v${{ steps.get-version.outputs.result }}
           name: Release v${{ steps.get-version.outputs.result }}
           body: |
@@ -92,6 +104,6 @@ jobs:
         uses: wdzeng/edge-addon@v2
         with:
           product-id: ${{ secrets.EDGE_PRODUCT_ID }}
-          zip-path: dist/simple-url-redirector.zip
+          zip-path: dist/simple-url-redirector-chromium.zip
           client-id: ${{ secrets.EDGE_CLIENT_ID }}
           api-key: ${{ secrets.EDGE_API_KEY }}
