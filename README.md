@@ -25,6 +25,10 @@ It works two ways at once:
 
 You can install the extension directly from the [Microsoft Edge Add-ons Store](https://microsoftedge.microsoft.com/addons/detail/simple-url-redirector/mmikmpmhfhkijbbcjianpbegaefeaiio).
 
+### Mozilla Firefox
+
+You can install the extension directly from the [Firefox Browser Add-ons Store](https://addons.mozilla.org/en-US/firefox/addon/simple-url-redirect/).
+
 ### Manual Installation (Chrome, Chromium-based browsers)
 
 1. Click download below to get the zip file.

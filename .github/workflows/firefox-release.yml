@@ -1,11 +1,11 @@
-name: Auto Publish to Edge
+name: Auto Publish to Firefox
 on:
   schedule:
     - cron: '0 0 * * 0'
   workflow_dispatch:
 
 jobs:
-  edge-publish:
+  firefox-publish:
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -20,7 +20,7 @@ jobs:
             const { data: runs } = await github.rest.actions.listWorkflowRuns({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'edge-release.yml',
+              workflow_id: 'firefox-release.yml',
               status: 'success',
               per_page: 1
             });
@@ -55,7 +55,7 @@ jobs:
             const releaseDate = new Date(latestRelease.published_at);
             
             if (context.eventName !== 'workflow_dispatch' && releaseDate <= lastRunDate) {
-              console.log("No new release since last edge publish. Skipping.");
+              console.log("No new release since last firefox publish. Skipping.");
               core.setOutput('skip', 'true');
               return;
             }
@@ -69,13 +69,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download ${{ steps.check.outputs.tag_name }} -p "simple-url-redirector-chromium.zip" --repo ${{ github.repository }}
+          gh release download ${{ steps.check.outputs.tag_name }} -p "simple-url-redirector-firefox.zip" --repo ${{ github.repository }}
 
-      - name: Publish to Edge Add-ons
+      - name: Publish to Mozilla Add-ons
         if: steps.check.outputs.skip == 'false'
-        uses: wdzeng/edge-addon@v2
-        with:
-          product-id: ${{ secrets.EDGE_PRODUCT_ID }}
-          zip-path: simple-url-redirector-chromium.zip
-          client-id: ${{ secrets.EDGE_CLIENT_ID }}
-          api-key: ${{ secrets.EDGE_API_KEY }}
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
+          WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
+        run: |
+          unzip simple-url-redirector-firefox.zip -d firefox-ext
+          npx -y web-ext sign --source-dir firefox-ext --channel=listed
