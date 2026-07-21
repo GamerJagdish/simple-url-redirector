@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - 'README.md'
       - 'LICENSE'
-      - '.github/workflows/release.yml'
+      - '.github/**'
   workflow_dispatch:
 
 jobs:
@@ -100,10 +100,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to Edge Add-ons
-        uses: wdzeng/edge-addon@v2
-        with:
-          product-id: ${{ secrets.EDGE_PRODUCT_ID }}
-          zip-path: dist/simple-url-redirector-chromium.zip
-          client-id: ${{ secrets.EDGE_CLIENT_ID }}
-          api-key: ${{ secrets.EDGE_API_KEY }}
+
