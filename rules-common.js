@@ -235,3 +235,58 @@ function setupUndoButton(elements, onUpdate) {
     }
   });
 }
+
+function setupSegmentedControls() {
+  document.querySelectorAll(".segmented-control").forEach((control) => {
+    const checkbox = control.querySelector('input[type="checkbox"]');
+    if (!checkbox) return;
+
+    const simpleBtn = control.querySelector(".segment-simple");
+    const advancedBtn = control.querySelector(".segment-advanced");
+
+    if (simpleBtn) {
+      simpleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (checkbox.checked) {
+          checkbox.checked = false;
+          checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      });
+    }
+
+    if (advancedBtn) {
+      advancedBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (!checkbox.checked) {
+          checkbox.checked = true;
+          checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      });
+    }
+
+    control.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        if (checkbox.checked) {
+          checkbox.checked = false;
+          checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      } else if (e.key === "ArrowRight") {
+        if (!checkbox.checked) {
+          checkbox.checked = true;
+          checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      } else if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        checkbox.checked = !checkbox.checked;
+        checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    });
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", setupSegmentedControls);
+} else {
+  setupSegmentedControls();
+}
+

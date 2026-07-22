@@ -21,13 +21,13 @@
     <div class="panel">
       <div class="add-row">
         <div class="add-row-top">
-          <div class="toggle-advanced">
-            <span>Simple</span>
-            <label class="mini-switch">
-              <input type="checkbox" id="advancedToggle">
-              <span class="mini-slider"></span>
-            </label>
-            <span>Advanced</span>
+          <div class="segmented-control" tabindex="0">
+            <input type="checkbox" id="advancedToggle" class="segmented-input" aria-label="Advanced mode">
+            <div class="segmented-track">
+              <div class="segmented-glider"></div>
+              <span class="segment-btn segment-simple">Simple</span>
+              <span class="segment-btn segment-advanced">Advanced</span>
+            </div>
           </div>
           <div style="display:flex; gap:8px;">
             <button class="secondary" id="cancelEditBtn" style="display: none;">Cancel</button>
