@@ -1,0 +1,347 @@
+:root {
+  --ink: #14171c;
+  --panel: #1b1f27;
+  --panel-2: #20242d;
+  --panel-border: #2a2f3a;
+  --text: #e7e9ee;
+  --muted: #8b93a3;
+  --accent: #6c8ef5;
+  --accent-dim: #3c4a72;
+  --accent-soft: #2a3556;
+  --on: #57c785;
+  --danger: #f2795a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Common form inputs */
+input[type="text"] {
+  width: 100%;
+  background: var(--ink);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+input[type="text"]::placeholder {
+  color: #56606f;
+}
+
+input.error {
+  border-color: var(--danger) !important;
+  background: rgba(242, 121, 90, 0.05) !important;
+}
+
+.arrow {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Common Buttons */
+button.add {
+  padding: 8px 12px;
+  background: var(--accent);
+  color: #0e1220;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+button.add:hover {
+  filter: brightness(1.08);
+}
+
+button.secondary {
+  padding: 7px 10px;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+button.secondary:hover {
+  border-color: var(--accent);
+}
+
+/* Sleek 2-Pill Segmented Control */
+.segmented-control {
+  position: relative;
+  display: inline-flex;
+  background: var(--ink);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  padding: 2px;
+  user-select: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  outline: none;
+  min-width: 145px;
+}
+
+.segmented-control:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(108, 142, 245, 0.3);
+}
+
+.segmented-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.segmented-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.segmented-glider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  background: var(--accent);
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(108, 142, 245, 0.35);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.segmented-input:checked + .segmented-track .segmented-glider {
+  transform: translateX(100%);
+}
+
+.segment-btn {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  color: var(--muted);
+  transition: color 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+  border-radius: 999px;
+}
+
+.segment-btn:hover {
+  color: var(--text);
+}
+
+.segment-btn:active {
+  transform: scale(0.96);
+}
+
+.segmented-input:not(:checked) + .segmented-track .segment-simple {
+  color: #0e1220;
+}
+
+.segmented-input:checked + .segmented-track .segment-advanced {
+  color: #0e1220;
+}
+
+/* Rule Items List */
+ul#ruleList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rule {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: var(--panel);
+}
+
+.rule .from-to {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+}
+
+.rule .domain {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rule .domain.from {
+  color: var(--muted);
+}
+
+.rule .domain.to {
+  color: #9be3b0;
+}
+
+.rule .arrow {
+  color: var(--accent);
+  font-size: 10px;
+}
+
+/* Mini Switch for Rule Enabler */
+.mini-switch {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.mini-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mini-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--accent-dim);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.mini-slider::before {
+  content: "";
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  top: 2px;
+  background: #cfd6e4;
+  border-radius: 50%;
+  transition: transform .15s;
+}
+
+.mini-switch input:checked+.mini-slider {
+  background: var(--accent);
+}
+
+.mini-switch input:checked+.mini-slider::before {
+  transform: translateX(14px);
+}
+
+button.remove {
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  color: var(--danger);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+button.remove:hover {
+  background: rgba(242, 121, 90, 0.1);
+  border-color: var(--danger);
+}
+
+button.edit {
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  color: var(--accent);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+button.edit:hover {
+  background: rgba(108, 142, 245, 0.1);
+  border-color: var(--accent);
+}
+
+.test-result {
+  font-size: 11px;
+  min-height: 14px;
+  padding-left: 2px;
+}
+
+.test-result.match {
+  color: #9be3b0;
+}
+
+.test-result.no-match {
+  color: var(--danger);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  z-index: 1000;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.undo-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+  font-size: 12px;
+}
+
+.undo-btn:hover {
+  text-decoration: underline;
+}
