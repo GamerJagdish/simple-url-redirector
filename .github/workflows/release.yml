@@ -21,6 +21,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Read version from manifest.json
         id: get-version
         uses: actions/github-script@v7
@@ -62,8 +67,8 @@ jobs:
         run: |
           mkdir -p dist
           
-          # 1. Package standard version (with Firefox support)
-          zip -r dist/simple-url-redirector-firefox.zip \
+          # 1. Unsigned Firefox version
+          zip -r dist/simple-url-redirector-firefox-unsigned.zip \
             icons/ \
             background.js \
             content.js \
@@ -76,7 +81,7 @@ jobs:
             popup.js \
             LICENSE
 
-          # 2. Package Chromium/Edge version (strict MV3 without background.scripts)
+          # 2. Unsigned Chromium/Edge version (strict MV3 without background.scripts)
           mkdir -p build-chromium
           cp -r icons background.js content.js manifest.json options.css options.html options.js popup.css popup.html popup.js LICENSE build-chromium/
           jq 'del(.background.scripts)' build-chromium/manifest.json > build-chromium/manifest_tmp.json && mv build-chromium/manifest_tmp.json build-chromium/manifest.json
@@ -84,12 +89,37 @@ jobs:
           zip -r ../dist/simple-url-redirector-chromium.zip *
           cd ..
 
+      - name: Sign Firefox Extension (.xpi & .zip)
+        if: env.FIREFOX_API_KEY != '' && env.FIREFOX_API_SECRET != ''
+        env:
+          FIREFOX_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
+          FIREFOX_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
+        run: |
+          mkdir -p web-ext-out
+          npx -y web-ext sign \
+            --source-dir . \
+            --artifacts-dir web-ext-out \
+            --channel unlisted \
+            --api-key "$FIREFOX_API_KEY" \
+            --api-secret "$FIREFOX_API_SECRET"
+          
+          XPI_FILE=$(find web-ext-out -name "*.xpi" | head -n 1)
+          if [ -n "$XPI_FILE" ]; then
+            cp "$XPI_FILE" dist/simple-url-redirector-firefox-signed.xpi
+            cp "$XPI_FILE" dist/simple-url-redirector-firefox-signed.zip
+            echo "Created: dist/simple-url-redirector-firefox-signed.xpi"
+            echo "Created: dist/simple-url-redirector-firefox-signed.zip"
+          fi
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/simple-url-redirector-firefox.zip
             dist/simple-url-redirector-chromium.zip
+            dist/simple-url-redirector-firefox-unsigned.zip
+            dist/simple-url-redirector-firefox-signed.zip
+            dist/simple-url-redirector-firefox-signed.xpi
+          fail_on_unmatched_files: false
           tag_name: v${{ steps.get-version.outputs.result }}
           name: Release v${{ steps.get-version.outputs.result }}
           body: |
@@ -99,5 +129,3 @@ jobs:
             Full Changelog: https://github.com/${{ github.repository }}/commits/v${{ steps.get-version.outputs.result }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-

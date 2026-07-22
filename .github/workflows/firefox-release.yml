@@ -69,7 +69,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download ${{ steps.check.outputs.tag_name }} -p "simple-url-redirector-firefox.zip" --repo ${{ github.repository }}
+          gh release download ${{ steps.check.outputs.tag_name }} -p "simple-url-redirector-firefox-unsigned.zip" --repo ${{ github.repository }}
 
       - name: Publish to Mozilla Add-ons
         if: steps.check.outputs.skip == 'false'
@@ -77,5 +77,5 @@ jobs:
           WEB_EXT_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
           WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
         run: |
-          unzip simple-url-redirector-firefox.zip -d firefox-ext
+          unzip simple-url-redirector-firefox-unsigned.zip -d firefox-ext
           npx -y web-ext sign --source-dir firefox-ext --channel=listed
