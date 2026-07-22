@@ -1,20 +1,8 @@
 const RULES_KEY = "rules";
 const ENABLED_KEY = "enabled";
 
-function escapeForRegex(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function buildFilter(fromDomain) {
-  const clean = fromDomain.trim().replace(/^https?:\/\//i, "").replace(/\/$/, "");
-  const esc = escapeForRegex(clean.replace(/^www\./i, ""));
-  return `^https?:\\/\\/(www\\.)?${esc}(\\/.*)?$`;
-}
-
-function buildSubstitution(toDomain) {
-  const clean = toDomain.trim().replace(/^https?:\/\//i, "").replace(/\/$/, "");
-  const target = clean.replace(/^www\./i, "");
-  return `https://${target}\\2`;
+function cleanDomain(str) {
+  return str.trim().replace(/^https?:\/\//i, "").replace(/\/$/, "").replace(/^www\./i, "").toLowerCase();
 }
 
 let cachedRules = [];
@@ -44,31 +32,44 @@ async function rebuildRules() {
   if (enabled) {
     rules.forEach((rule, index) => {
       if (!rule || !rule.from || !rule.to || rule.enabled === false) return;
-      
-      let regexFilter, regexSubstitution;
-      
-      if (rule.isRegex) {
-        regexFilter = rule.from;
-        regexSubstitution = rule.to;
-      } else {
-        regexFilter = buildFilter(rule.from);
-        regexSubstitution = buildSubstitution(rule.to);
-      }
 
-      addRules.push({
-        id: index + 1,
-        priority: 1,
-        action: {
-          type: "redirect",
-          redirect: {
-            regexSubstitution
+      if (rule.isRegex) {
+        addRules.push({
+          id: index + 1,
+          priority: 1,
+          action: {
+            type: "redirect",
+            redirect: {
+              regexSubstitution: rule.to
+            }
+          },
+          condition: {
+            regexFilter: rule.from,
+            resourceTypes: ["main_frame", "sub_frame"]
           }
-        },
-        condition: {
-          regexFilter,
-          resourceTypes: ["main_frame", "sub_frame"]
-        }
-      });
+        });
+      } else {
+        const cleanFrom = cleanDomain(rule.from);
+        const cleanTo = cleanDomain(rule.to);
+        if (!cleanFrom || !cleanTo) return;
+
+        addRules.push({
+          id: index + 1,
+          priority: 1,
+          action: {
+            type: "redirect",
+            redirect: {
+              transform: {
+                host: cleanTo
+              }
+            }
+          },
+          condition: {
+            urlFilter: `||${cleanFrom}^`,
+            resourceTypes: ["main_frame", "sub_frame"]
+          }
+        });
+      }
     });
   }
 
@@ -94,12 +95,11 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
-function isMatch(url, rule) {
+function isRuleMatch(url, rule) {
   if (!rule.from || !rule.to || rule.enabled === false) return false;
   if (rule.isRegex) {
     try {
-      const regex = new RegExp(rule.from);
-      return regex.test(url);
+      return new RegExp(rule.from).test(url);
     } catch (e) {
       return false;
     }
@@ -107,7 +107,7 @@ function isMatch(url, rule) {
     try {
       const urlObj = new URL(url);
       const host = urlObj.hostname.replace(/^www\./i, "").toLowerCase();
-      const fromHost = rule.from.trim().replace(/^https?:\/\//i, "").replace(/^www\./i, "").replace(/\/$/, "").toLowerCase();
+      const fromHost = cleanDomain(rule.from);
       return host === fromHost || host === `www.${fromHost}`;
     } catch (e) {
       return false;
@@ -115,43 +115,35 @@ function isMatch(url, rule) {
   }
 }
 
-let pendingRedirects = {}; 
-let confirmedRedirects = {}; 
+const pendingNotifications = new Map();
 
-chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
-  if (details.frameId === 0) {
-    const { rules, enabled } = await getState();
-    if (!enabled) return;
-    
-    for (const rule of rules) {
-      if (isMatch(details.url, rule)) {
-        pendingRedirects[details.tabId] = { rule, time: Date.now() };
-        break;
+chrome.webRequest.onBeforeRedirect.addListener(
+  async (details) => {
+    if (details.tabId >= 0 && details.type === "main_frame") {
+      const { rules, enabled } = await getState();
+      if (!enabled) return;
+
+      const matched = rules.find((r) => isRuleMatch(details.url, r));
+      if (matched) {
+        pendingNotifications.set(details.tabId, { rule: matched, time: Date.now() });
       }
     }
-  }
-});
-
-chrome.webNavigation.onCommitted.addListener((details) => {
-  if (details.frameId === 0) {
-    const pending = pendingRedirects[details.tabId];
-    if (pending && Date.now() - pending.time < 5000) {
-      confirmedRedirects[details.tabId] = pending.rule;
-      delete pendingRedirects[details.tabId];
-    } else {
-      delete confirmedRedirects[details.tabId];
-    }
-  }
-});
+  },
+  { urls: ["<all_urls>"] }
+);
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "CHECK_REDIRECT") {
     const tabId = sender.tab && sender.tab.id;
-    if (tabId && confirmedRedirects[tabId]) {
-      sendResponse({ redirected: true, rule: confirmedRedirects[tabId] });
-      delete confirmedRedirects[tabId]; 
-    } else {
-      sendResponse({ redirected: false });
+    if (tabId && pendingNotifications.has(tabId)) {
+      const item = pendingNotifications.get(tabId);
+      pendingNotifications.delete(tabId);
+      if (Date.now() - item.time < 10000) {
+        sendResponse({ redirected: true, rule: item.rule });
+        return true;
+      }
     }
+    sendResponse({ redirected: false });
   }
+  return true;
 });
