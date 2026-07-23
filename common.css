@@ -187,15 +187,18 @@ ul#ruleList {
 
 .rule .from-to {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
+  min-width: 0;
 }
 
 .rule .domain {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .rule .domain.from {
@@ -208,7 +211,8 @@ ul#ruleList {
 
 .rule .arrow {
   color: var(--accent);
-  font-size: 10px;
+  font-size: 11px;
+  flex-shrink: 0;
 }
 
 /* Mini Switch for Rule Enabler */

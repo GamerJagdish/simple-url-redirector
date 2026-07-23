@@ -82,9 +82,11 @@ h1 {
 
 .panel .rule .from-to {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
+  min-width: 0;
 }
 
 .panel .rule .domain {
@@ -98,7 +100,7 @@ h1 {
   white-space: nowrap;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 12px;
-  width: fit-content;
+  min-width: 0;
   max-width: 100%;
 }
 
@@ -113,8 +115,9 @@ h1 {
 .panel .rule .arrow {
   color: var(--accent);
   font-size: 11px;
-  align-self: flex-start;
-  margin-left: 2px;
+  align-self: center;
+  margin-left: 0;
+  flex-shrink: 0;
 }
 
 .empty {
