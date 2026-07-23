@@ -6,12 +6,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 18px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--panel-border);
 }
 
 .brand {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 650;
   letter-spacing: 0.2px;
 }
@@ -25,7 +25,7 @@ button.head-btn {
   color: var(--accent);
   border: 1px solid rgba(108, 142, 245, 0.25);
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -41,7 +41,7 @@ button.head-btn:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
+  padding: 8px 12px;
 }
 
 .row-label {
@@ -100,12 +100,12 @@ input:checked+.slider::before {
 }
 
 .actions {
-  padding: 4px 18px 16px;
+  padding: 4px 12px 10px;
 }
 
 button.primary {
   width: 100%;
-  padding: 9px 10px;
+  padding: 8px 10px;
   background: var(--accent);
   color: #0e1220;
   border: none;
@@ -120,8 +120,8 @@ button.primary:hover {
 }
 
 .empty {
-  margin: 0 18px 16px;
-  padding: 10px 12px;
+  margin: 0 12px 10px;
+  padding: 8px 10px;
   border: 1px dashed var(--panel-border);
   border-radius: 8px;
   font-size: 12px;
@@ -131,24 +131,24 @@ button.primary:hover {
 
 /* Rules Section Layout */
 .rules-section {
-  padding: 0 18px 16px;
+  padding: 0 12px 10px;
 }
 
 .add-row {
   display: grid;
-  gap: 10px;
-  padding: 12px;
+  gap: 8px;
+  padding: 10px;
   border: 1px solid var(--panel-border);
   border-radius: 10px;
   background: var(--panel);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .add-row-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .add-row-inputs {

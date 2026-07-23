@@ -178,10 +178,10 @@ ul#ruleList {
   grid-template-columns: auto 1fr auto auto;
   gap: 8px;
   align-items: center;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border: 1px solid var(--panel-border);
   border-radius: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   background: var(--panel);
 }
 
