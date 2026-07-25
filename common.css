@@ -1,29 +1,38 @@
 :root {
-  --ink: #14171c;
-  --panel: #1b1f27;
-  --panel-2: #20242d;
-  --panel-border: #2a2f3a;
-  --text: #e7e9ee;
-  --muted: #8b93a3;
-  --accent: #6c8ef5;
-  --accent-dim: #3c4a72;
-  --accent-soft: #2a3556;
-  --on: #57c785;
-  --danger: #f2795a;
+  --ink:          #0f1117;
+  --panel:        #171b24;
+  --panel-2:      #1c2030;
+  --panel-border: #252b38;
+  --text:         #dde2ec;
+  --muted:        #7a8394;
+  --accent:       #5b7ef5;
+  --accent-dim:   #2e3d6e;
+  --accent-soft:  #1e2a4a;
+  --on:           #4abf78;
+  --on-text:      #9be3b0;  /* muted green for domain.to labels */
+  --danger:       #e8684a;
+  --row-hover:    rgba(255, 255, 255, 0.018);
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
 }
 
 body {
   margin: 0;
   background: var(--ink);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Google Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-optical-sizing: auto;
 }
 
-/* Common form inputs */
+/* ─── Inputs ─────────────────────────────────────────────── */
+
 input[type="text"] {
   width: 100%;
   background: var(--ink);
@@ -32,6 +41,7 @@ input[type="text"] {
   padding: 8px 10px;
   border-radius: 6px;
   font-size: 12px;
+  transition: border-color 0.15s ease;
 }
 
 input[type="text"]:focus {
@@ -40,34 +50,43 @@ input[type="text"]:focus {
 }
 
 input[type="text"]::placeholder {
-  color: #56606f;
+  color: var(--muted);
+  opacity: 0.6;
 }
 
 input.error {
   border-color: var(--danger) !important;
-  background: rgba(242, 121, 90, 0.05) !important;
+  background: rgba(232, 104, 74, 0.05) !important;
 }
 
 .arrow {
   color: var(--muted);
   font-size: 14px;
+  flex-shrink: 0;
 }
 
-/* Common Buttons */
+/* ─── Buttons ────────────────────────────────────────────── */
+
 button.add {
   padding: 8px 12px;
   background: var(--accent);
-  color: #0e1220;
+  color: #f0f4ff;
   border: none;
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+  transition: filter 0.15s ease;
 }
 
 button.add:hover {
-  filter: brightness(1.08);
+  filter: brightness(1.1);
+}
+
+button.add:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 button.secondary {
@@ -75,16 +94,47 @@ button.secondary {
   background: transparent;
   color: var(--accent);
   border: 1px solid var(--accent-dim);
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 button.secondary:hover {
   border-color: var(--accent);
+  background: var(--accent-soft);
 }
 
-/* Sleek 2-Pill Segmented Control */
+button.secondary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button.danger {
+  padding: 7px 12px;
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid rgba(232, 104, 74, 0.35);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+button.danger:hover {
+  background: rgba(232, 104, 74, 0.08);
+  border-color: var(--danger);
+}
+
+button.danger:focus-visible {
+  outline: 2px solid var(--danger);
+  outline-offset: 2px;
+}
+
+/* ─── Segmented Control ──────────────────────────────────── */
+
 .segmented-control {
   position: relative;
   display: inline-flex;
@@ -93,14 +143,13 @@ button.secondary:hover {
   border-radius: 999px;
   padding: 2px;
   user-select: none;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
   outline: none;
   min-width: 145px;
 }
 
 .segmented-control:focus-visible {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(108, 142, 245, 0.3);
+  box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
 .segmented-input {
@@ -126,7 +175,6 @@ button.secondary:hover {
   width: 50%;
   background: var(--accent);
   border-radius: 999px;
-  box-shadow: 0 2px 6px rgba(108, 142, 245, 0.35);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1;
 }
@@ -145,7 +193,7 @@ button.secondary:hover {
   text-align: center;
   cursor: pointer;
   color: var(--muted);
-  transition: color 0.2s ease, transform 0.1s ease;
+  transition: color 0.2s ease;
   white-space: nowrap;
   border-radius: 999px;
 }
@@ -154,19 +202,16 @@ button.secondary:hover {
   color: var(--text);
 }
 
-.segment-btn:active {
-  transform: scale(0.96);
-}
-
 .segmented-input:not(:checked) + .segmented-track .segment-simple {
-  color: #0e1220;
+  color: #f0f4ff;
 }
 
 .segmented-input:checked + .segmented-track .segment-advanced {
-  color: #0e1220;
+  color: #f0f4ff;
 }
 
-/* Rule Items List */
+/* ─── Rule List ──────────────────────────────────────────── */
+
 ul#ruleList {
   list-style: none;
   margin: 0;
@@ -206,7 +251,7 @@ ul#ruleList {
 }
 
 .rule .domain.to {
-  color: #9be3b0;
+  color: var(--on-text);
 }
 
 .rule .arrow {
@@ -215,7 +260,8 @@ ul#ruleList {
   flex-shrink: 0;
 }
 
-/* Mini Switch for Rule Enabler */
+/* ─── Mini Toggle Switch ─────────────────────────────────── */
+
 .mini-switch {
   position: relative;
   width: 32px;
@@ -229,13 +275,18 @@ ul#ruleList {
   height: 0;
 }
 
+.mini-switch input:focus-visible + .mini-slider {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .mini-slider {
   position: absolute;
   inset: 0;
   background: var(--accent-dim);
   border-radius: 999px;
   cursor: pointer;
-  transition: background .15s;
+  transition: background 0.15s ease;
 }
 
 .mini-slider::before {
@@ -245,18 +296,21 @@ ul#ruleList {
   width: 14px;
   left: 2px;
   top: 2px;
-  background: #cfd6e4;
+  background: #c8d0e0;
   border-radius: 50%;
-  transition: transform .15s;
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
-.mini-switch input:checked+.mini-slider {
+.mini-switch input:checked + .mini-slider {
   background: var(--accent);
 }
 
-.mini-switch input:checked+.mini-slider::before {
+.mini-switch input:checked + .mini-slider::before {
   transform: translateX(14px);
+  background: #0e1630;
 }
+
+/* ─── Icon Buttons (edit / remove) ──────────────────────── */
 
 button.remove {
   background: transparent;
@@ -266,18 +320,22 @@ button.remove {
   width: 28px;
   height: 28px;
   cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 button.remove:hover {
-  background: rgba(242, 121, 90, 0.1);
+  background: rgba(232, 104, 74, 0.1);
   border-color: var(--danger);
+}
+
+button.remove:focus-visible {
+  outline: 2px solid var(--danger);
+  outline-offset: 2px;
 }
 
 button.edit {
@@ -288,52 +346,60 @@ button.edit {
   width: 28px;
   height: 28px;
   cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 button.edit:hover {
-  background: rgba(108, 142, 245, 0.1);
+  background: rgba(91, 126, 245, 0.1);
   border-color: var(--accent);
 }
+
+button.edit:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ─── Regex test result ──────────────────────────────────── */
 
 .test-result {
   font-size: 11px;
   min-height: 14px;
   padding-left: 2px;
+  color: transparent; /* invisible until a state class is applied */
 }
 
 .test-result.match {
-  color: #9be3b0;
+  color: var(--on-text);
 }
 
 .test-result.no-match {
   color: var(--danger);
 }
 
-/* Toast */
+/* ─── Toast ──────────────────────────────────────────────── */
+
 .toast {
   position: fixed;
   bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--ink);
+  background: var(--panel);
   border: 1px solid var(--panel-border);
   color: var(--text);
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: 8px;
   display: flex;
   gap: 12px;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   z-index: 1000;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .undo-btn {
@@ -344,24 +410,33 @@ button.edit:hover {
   font-weight: 600;
   padding: 0;
   font-size: 12px;
+  transition: opacity 0.15s ease;
 }
 
 .undo-btn:hover {
+  opacity: 0.8;
   text-decoration: underline;
 }
 
-/* Modal Overlay & Dialog */
+.undo-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── Modal ──────────────────────────────────────────────── */
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(14, 17, 28, 0.75);
+  background: rgba(9, 11, 18, 0.8);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
   padding: 16px;
-  animation: fadeIn 0.15s ease-out;
+  animation: fadeIn 0.15s ease-out both;
 }
 
 .modal-card {
@@ -371,15 +446,15 @@ button.edit:hover {
   width: 100%;
   max-width: 440px;
   padding: 20px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   gap: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 .modal-title {
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text);
 }
@@ -405,38 +480,31 @@ button.edit:hover {
 .modal-summary-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   color: var(--text);
 }
 
 .modal-summary-item .count {
   font-weight: 600;
   color: var(--accent);
+  font-variant-numeric: tabular-nums;
 }
 
 .modal-actions {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-  margin-top: 6px;
 }
 
-button.danger {
-  padding: 7px 12px;
-  background: transparent;
-  color: var(--danger);
-  border: 1px solid rgba(242, 121, 90, 0.4);
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-button.danger:hover {
-  background: rgba(242, 121, 90, 0.1);
-  border-color: var(--danger);
-}
+/* ─── Animation ──────────────────────────────────────────── */
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

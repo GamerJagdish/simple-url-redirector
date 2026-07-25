@@ -86,6 +86,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "sync" && (changes[RULES_KEY] || changes[ENABLED_KEY])) {
     if (changes[RULES_KEY]) {
       cachedRules = Array.isArray(changes[RULES_KEY].newValue) ? changes[RULES_KEY].newValue : [];
+      // New rule objects — clear any compiled regex from previous cache
     }
     if (changes[ENABLED_KEY]) {
       cachedEnabled = changes[ENABLED_KEY].newValue !== false;
@@ -98,11 +99,15 @@ chrome.storage.onChanged.addListener((changes, area) => {
 function isRuleMatch(url, rule) {
   if (!rule.from || !rule.to || rule.enabled === false) return false;
   if (rule.isRegex) {
-    try {
-      return new RegExp(rule.from).test(url);
-    } catch (e) {
-      return false;
+    // Use cached compiled regex if available, otherwise compile and cache
+    if (!rule._regex) {
+      try {
+        rule._regex = new RegExp(rule.from);
+      } catch (e) {
+        return false;
+      }
     }
+    return rule._regex.test(url);
   } else {
     try {
       const urlObj = new URL(url);
@@ -115,7 +120,20 @@ function isRuleMatch(url, rule) {
   }
 }
 
+const MAX_PENDING = 50;
 const pendingNotifications = new Map();
+
+function prunePendingNotifications() {
+  const cutoff = Date.now() - 15000;
+  for (const [tabId, item] of pendingNotifications) {
+    if (item.time < cutoff) pendingNotifications.delete(tabId);
+  }
+  // Hard cap: evict oldest if still over limit
+  if (pendingNotifications.size > MAX_PENDING) {
+    const oldest = [...pendingNotifications.entries()].sort((a, b) => a[1].time - b[1].time);
+    oldest.slice(0, pendingNotifications.size - MAX_PENDING).forEach(([id]) => pendingNotifications.delete(id));
+  }
+}
 
 chrome.webRequest.onBeforeRedirect.addListener(
   async (details) => {
@@ -125,6 +143,7 @@ chrome.webRequest.onBeforeRedirect.addListener(
 
       const matched = rules.find((r) => isRuleMatch(details.url, r));
       if (matched) {
+        prunePendingNotifications();
         pendingNotifications.set(details.tabId, { rule: matched, time: Date.now() });
       }
     }

@@ -15,8 +15,7 @@ const elements = {
   addBtn: document.getElementById("addBtn"),
   ruleList: document.getElementById("ruleList"),
   toast: document.getElementById("toast"),
-  undoBtn: document.getElementById("undoBtn"),
-  cancelEditBtn: document.getElementById("cancelEditBtn")
+  undoBtn: document.getElementById("undoBtn")
 };
 
 function loadRules() {
@@ -29,10 +28,6 @@ function loadRules() {
     }
     renderRuleList(rules, elements, loadRules);
   });
-}
-
-if (elements.cancelEditBtn) {
-  elements.cancelEditBtn.addEventListener("click", () => resetEditMode(elements));
 }
 
 if (elements.masterToggle) {

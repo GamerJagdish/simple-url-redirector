@@ -1,19 +1,23 @@
 body {
-  width: 340px;
+  width: 400px;
+  min-width: 400px;
 }
+
+/* ─── Header ─────────────────────────────────────────────── */
 
 .head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--panel-border);
 }
 
 .brand {
-  font-size: 15px;
-  font-weight: 650;
-  letter-spacing: 0.2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.1px;
 }
 
 button.head-btn {
@@ -21,21 +25,28 @@ button.head-btn {
   align-items: center;
   gap: 5px;
   padding: 5px 9px;
-  background: rgba(108, 142, 245, 0.08);
+  background: var(--accent-soft);
   color: var(--accent);
-  border: 1px solid rgba(108, 142, 245, 0.25);
+  border: 1px solid var(--accent-dim);
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 button.head-btn:hover {
   background: var(--accent);
-  color: #0e1220;
+  color: #f0f4ff;
   border-color: var(--accent);
 }
+
+button.head-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ─── Master toggle row ──────────────────────────────────── */
 
 .row {
   display: flex;
@@ -45,17 +56,20 @@ button.head-btn:hover {
 }
 
 .row-label {
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
 }
 
 .row-label .count {
   display: block;
   font-size: 11px;
+  font-weight: 400;
   color: var(--muted);
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
-/* Popup Master Toggle Switch */
+/* Master Toggle Switch */
 .switch {
   position: relative;
   width: 38px;
@@ -67,6 +81,11 @@ button.head-btn:hover {
   opacity: 0;
   width: 0;
   height: 0;
+}
+
+.switch input:focus-visible + .slider {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .slider {
@@ -85,51 +104,34 @@ button.head-btn:hover {
   width: 16px;
   left: 3px;
   top: 3px;
-  background: #cfd6e4;
+  background: #c8d0e0;
   border-radius: 50%;
   transition: transform 0.15s ease, background 0.15s ease;
 }
 
-input:checked+.slider {
+input:checked + .slider {
   background: var(--on);
 }
 
-input:checked+.slider::before {
+input:checked + .slider::before {
   transform: translateX(16px);
-  background: #0e1a12;
+  background: #0b1c10;
 }
 
-.actions {
-  padding: 4px 12px 10px;
-}
-
-button.primary {
-  width: 100%;
-  padding: 8px 10px;
-  background: var(--accent);
-  color: #0e1220;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-button.primary:hover {
-  filter: brightness(1.08);
-}
+/* ─── Empty state ────────────────────────────────────────── */
 
 .empty {
-  margin: 0 12px 10px;
+  margin: 0 12px 8px;
   padding: 8px 10px;
   border: 1px dashed var(--panel-border);
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--muted);
   line-height: 1.5;
 }
 
-/* Rules Section Layout */
+/* ─── Rules section ──────────────────────────────────────── */
+
 .rules-section {
   padding: 0 12px 10px;
 }
@@ -148,7 +150,6 @@ button.primary:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
 }
 
 .add-row-inputs {
@@ -161,4 +162,13 @@ button.primary:hover {
 .advanced-row-inputs {
   display: grid;
   gap: 8px;
+}
+
+/* Add button row */
+.add-actions {
+  display: flex;
+}
+
+.add-actions button {
+  flex: 1;
 }

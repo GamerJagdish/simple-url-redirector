@@ -4,6 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <title>Simple URL Redirector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght,MONO@0,300..800,1;1,300..800,1&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=optional" rel="stylesheet">
   <link rel="stylesheet" href="common.css">
   <link rel="stylesheet" href="popup.css">
 </head>
@@ -11,25 +14,25 @@
 <body>
   <div class="head">
     <div class="brand">Simple URL Redirector</div>
-    <button class="head-btn" id="openOptions" title="Open Full View">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+    <button class="head-btn" id="openOptions" title="Open full view">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
       <span>Full view</span>
     </button>
   </div>
 
   <div class="row">
     <div class="row-label">
-      Active
+      Redirects
       <span class="count" id="ruleCount">0 rules active</span>
     </div>
     <label class="switch">
-      <input type="checkbox" id="masterToggle" />
+      <input type="checkbox" id="masterToggle" aria-label="Enable all redirects" />
       <span class="slider"></span>
     </label>
   </div>
 
   <div id="emptyState" class="empty" style="display:none;">
-    No rules yet. Add a URL pair to start redirecting.
+    No rules yet. Add a URL pair below to start redirecting.
   </div>
 
   <div class="rules-section">
@@ -45,26 +48,25 @@
         </div>
       </div>
       <div id="simpleInputs" class="add-row-inputs">
-        <input type="text" id="fromInput" placeholder="From, e.g. redditez.com" />
-        <span class="arrow">to</span>
-        <input type="text" id="toInput" placeholder="To, e.g. reddit.com" />
+        <input type="text" id="fromInput" placeholder="From, e.g. redditez.com" autocomplete="off" spellcheck="false" />
+        <span class="arrow" aria-hidden="true">to</span>
+        <input type="text" id="toInput" placeholder="To, e.g. reddit.com" autocomplete="off" spellcheck="false" />
       </div>
       <div id="advancedInputs" class="advanced-row-inputs" style="display:none;">
-        <input type="text" id="regexFromInput" placeholder="From regex, e.g. ^https://(www\.)?redditez\.com" />
-        <input type="text" id="regexToInput" placeholder="To substitution, e.g. https://reddit.com" />
-        <input type="text" id="regexTestInput" placeholder="Test URL (optional)" />
-        <div id="regexTestResult" class="test-result"></div>
+        <input type="text" id="regexFromInput" placeholder="From regex, e.g. ^https://(www\.)?redditez\.com" autocomplete="off" spellcheck="false" />
+        <input type="text" id="regexToInput" placeholder="To substitution, e.g. https://reddit.com" autocomplete="off" spellcheck="false" />
+        <input type="text" id="regexTestInput" placeholder="Test URL (optional)" autocomplete="off" spellcheck="false" />
+        <div id="regexTestResult" class="test-result" aria-live="polite"></div>
       </div>
-      <div style="display:flex; gap:8px; margin-top: 8px;">
-        <button class="secondary" id="cancelEditBtn" style="display: none; margin-top: 0; flex: 1;">Cancel</button>
-        <button class="add" id="addBtn" style="margin-top: 0; flex: 1;">Add rule</button>
+      <div class="add-actions">
+        <button class="add" id="addBtn">Add rule</button>
       </div>
     </div>
 
-    <ul id="ruleList"></ul>
+    <ul id="ruleList" aria-label="Redirect rules"></ul>
   </div>
 
-  <div id="toast" class="toast" style="display:none;">
+  <div id="toast" class="toast" role="status" aria-live="polite" style="display:none;">
     <span id="toastMsg">Rule deleted.</span>
     <button id="undoBtn" class="undo-btn">Undo</button>
   </div>
