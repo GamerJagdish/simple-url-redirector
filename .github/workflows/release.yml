@@ -133,7 +133,11 @@ jobs:
             ## What's Changed
             ${{ steps.changelog.outputs.changelog }}
             
-            Full Changelog: https://github.com/${{ github.repository }}/commits/v${{ steps.check-version.outputs.version }}
+            **Full Changelog**: https://github.com/${{ github.repository }}/commits/v${{ steps.check-version.outputs.version }}
+
+            ## Install from Web Stores
+            * **Firefox Add-ons**: [Install for Firefox](https://addons.mozilla.org/en-US/firefox/addon/simple-url-redirect/)
+            * **Microsoft Edge Add-ons**: [Install for Edge](https://microsoftedge.microsoft.com/addons/detail/simple-url-redirector/mmikmpmhfhkijbbcjianpbegaefeaiio)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
