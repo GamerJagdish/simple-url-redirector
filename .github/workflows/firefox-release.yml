@@ -1,7 +1,7 @@
 name: Auto Publish to Firefox
 on:
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -28,15 +28,6 @@ jobs:
             let lastRunDate = new Date(0);
             if (runs.workflow_runs.length > 0) {
               lastRunDate = new Date(runs.workflow_runs[0].updated_at);
-            }
-            
-            const now = new Date();
-            const diffDays = (now - lastRunDate) / (1000 * 60 * 60 * 24);
-            
-            if (context.eventName === 'schedule' && diffDays < 7) {
-              console.log(`Last run was ${diffDays.toFixed(1)} days ago, less than 7 days. Skipping.`);
-              core.setOutput('skip', 'true');
-              return;
             }
             
             let latestRelease;
@@ -78,4 +69,15 @@ jobs:
           WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
         run: |
           unzip simple-url-redirector-firefox-unsigned.zip -d firefox-ext
-          npx -y web-ext sign --source-dir firefox-ext --channel=listed
+          set +e
+          OUTPUT=$(npx -y web-ext sign --source-dir firefox-ext --channel=listed 2>&1)
+          EXIT_CODE=$?
+          echo "$OUTPUT"
+          if [ $EXIT_CODE -ne 0 ]; then
+            if echo "$OUTPUT" | grep -qi "already exists"; then
+              echo "::warning::Version already exists on Mozilla Add-ons. Skipping duplicate submission."
+              exit 0
+            else
+              exit $EXIT_CODE
+            fi
+          fi

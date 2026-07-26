@@ -119,28 +119,6 @@ jobs:
           zip -r ../dist/simple-url-redirector-chromium.zip *
           cd ..
 
-      - name: Sign Firefox Extension (.xpi & .zip)
-        if: steps.check-version.outputs.changed == 'true' && env.FIREFOX_API_KEY != '' && env.FIREFOX_API_SECRET != ''
-        env:
-          FIREFOX_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
-          FIREFOX_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
-        run: |
-          mkdir -p web-ext-out
-          npx -y web-ext sign \
-            --source-dir . \
-            --artifacts-dir web-ext-out \
-            --channel unlisted \
-            --api-key "$FIREFOX_API_KEY" \
-            --api-secret "$FIREFOX_API_SECRET"
-          
-          XPI_FILE=$(find web-ext-out -name "*.xpi" | head -n 1)
-          if [ -n "$XPI_FILE" ]; then
-            cp "$XPI_FILE" dist/simple-url-redirector-firefox-signed.xpi
-            cp "$XPI_FILE" dist/simple-url-redirector-firefox-signed.zip
-            echo "Created: dist/simple-url-redirector-firefox-signed.xpi"
-            echo "Created: dist/simple-url-redirector-firefox-signed.zip"
-          fi
-
       - name: Create Release
         if: steps.check-version.outputs.changed == 'true'
         uses: softprops/action-gh-release@v2
@@ -148,8 +126,6 @@ jobs:
           files: |
             dist/simple-url-redirector-chromium.zip
             dist/simple-url-redirector-firefox-unsigned.zip
-            dist/simple-url-redirector-firefox-signed.zip
-            dist/simple-url-redirector-firefox-signed.xpi
           fail_on_unmatched_files: false
           tag_name: v${{ steps.check-version.outputs.version }}
           name: Release v${{ steps.check-version.outputs.version }}
