@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       actions: read
-      contents: read
+      contents: write
     
     steps:
       - name: Check conditions
         id: check
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             if (context.eventName === 'workflow_run' && context.payload.workflow_run.conclusion !== 'success') {
@@ -80,3 +80,39 @@ jobs:
           xpi-path: simple-url-redirector-firefox-unsigned.zip
           jwt-issuer: ${{ secrets.FIREFOX_API_KEY }}
           jwt-secret: ${{ secrets.FIREFOX_API_SECRET }}
+
+      - name: Fetch Signed Assets from Mozilla & Attach to GitHub Release
+        if: steps.check.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Fetching signed extension from Mozilla Add-ons API..."
+          
+          XPI_URL=""
+          for i in {1..12}; do
+            RESPONSE=$(curl -s "https://addons.mozilla.org/api/v5/addons/addon/simple-url-redirect/")
+            URL=$(echo "$RESPONSE" | jq -r '.current_version.file.url // empty')
+            if [ -n "$URL" ]; then
+              XPI_URL="$URL"
+              echo "Found signed XPI URL: $XPI_URL"
+              break
+            fi
+            echo "Attempt $i: Signed XPI URL not available yet. Retrying in 10s..."
+            sleep 10
+          done
+
+          if [ -z "$XPI_URL" ]; then
+            echo "Error: Could not retrieve signed XPI URL from Mozilla Add-ons API."
+            exit 1
+          fi
+
+          echo "Downloading signed XPI..."
+          curl -sL "$XPI_URL" -o "simple-url-redirector-firefox-signed.xpi"
+          cp "simple-url-redirector-firefox-signed.xpi" "simple-url-redirector-firefox-signed.zip"
+
+          echo "Uploading signed assets (.xpi and .zip) to GitHub Release ${{ steps.check.outputs.tag_name }}..."
+          gh release upload ${{ steps.check.outputs.tag_name }} \
+            "simple-url-redirector-firefox-signed.xpi" \
+            "simple-url-redirector-firefox-signed.zip" \
+            --clobber \
+            --repo ${{ github.repository }}
