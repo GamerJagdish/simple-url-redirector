@@ -490,6 +490,33 @@ button.edit:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
+.modal-input {
+  width: 100%;
+  background: var(--ink);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  transition: border-color 0.15s ease;
+  font-family: "Google Sans Code", monospace;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modal-error {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--danger);
+  background: rgba(232, 104, 74, 0.08);
+  border: 1px solid rgba(232, 104, 74, 0.25);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
 .modal-actions {
   display: flex;
   gap: 8px;
