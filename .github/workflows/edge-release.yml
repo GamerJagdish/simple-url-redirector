@@ -1,7 +1,5 @@
-name: Auto Publish to Edge
+name: Publish to Edge
 on:
-  schedule:
-    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -17,28 +15,6 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            const { data: runs } = await github.rest.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'edge-release.yml',
-              status: 'success',
-              per_page: 1
-            });
-            
-            let lastRunDate = new Date(0);
-            if (runs.workflow_runs.length > 0) {
-              lastRunDate = new Date(runs.workflow_runs[0].updated_at);
-            }
-            
-            const now = new Date();
-            const diffDays = (now - lastRunDate) / (1000 * 60 * 60 * 24);
-            
-            if (context.eventName === 'schedule' && diffDays < 15) {
-              console.log(`Last run was ${diffDays.toFixed(1)} days ago, less than 15 days. Skipping.`);
-              core.setOutput('skip', 'true');
-              return;
-            }
-            
             let latestRelease;
             try {
               const { data: release } = await github.rest.repos.getLatestRelease({
@@ -52,15 +28,7 @@ jobs:
               return;
             }
             
-            const releaseDate = new Date(latestRelease.published_at);
-            
-            if (context.eventName !== 'workflow_dispatch' && releaseDate <= lastRunDate) {
-              console.log("No new release since last edge publish. Skipping.");
-              core.setOutput('skip', 'true');
-              return;
-            }
-            
-            console.log(`Conditions met. Proceeding with publish for tag ${latestRelease.tag_name}.`);
+            console.log(`Proceeding with publish for tag ${latestRelease.tag_name}.`);
             core.setOutput('skip', 'false');
             core.setOutput('tag_name', latestRelease.tag_name);
 
