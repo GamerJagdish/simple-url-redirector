@@ -26,6 +26,11 @@ It works two ways at once:
 You can install the extension directly from the [Microsoft Edge Add-ons Store](https://microsoftedge.microsoft.com/addons/detail/simple-url-redirector/mmikmpmhfhkijbbcjianpbegaefeaiio).
 
 ### Mozilla Firefox
+<div>
+	<a href="https://addons.mozilla.org/en-US/firefox/addon/simple-url-redirect/" target='_blank'>
+		<img src="https://i.postimg.cc/47pqX976/Firefox-Add-ons.png" width="200" alt="Simple URL Redirector Firefox-Add-ons">
+	</a>
+</div>
 
 You can install the extension directly from the [Firefox Browser Add-ons Store](https://addons.mozilla.org/en-US/firefox/addon/simple-url-redirect/).
 
