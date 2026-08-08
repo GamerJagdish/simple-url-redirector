@@ -1,6 +1,6 @@
 <div align="center">
-	<a href="https://gamerjagdish.github.io/simple-url-replacer/">
-		<img src="icons/icon1280.png" width="200" alt="simple-url-replacer">
+	<a href="https://gamerjagdish.github.io/simple-url-redirector/">
+		<img src="icons/icon1280.png" width="200" alt="simple-url-redirector">
 	</a>
 </div>
 
@@ -9,15 +9,22 @@
 Automatically redirects links from one URL to another, based on rules you define. For example, `redditez.com` to `reddit.com`.
 
 <p align="center">
-  <a href="https://github.com/GamerJagdish/simple-url-replacer/releases/latest/"><img alt="Latest Release" src="https://img.shields.io/github/v/release/GamerJagdish/simple-url-replacer?display_name=release&style=flat-square"></a>
-  <a href="https://github.com/GamerJagdish/simple-url-replacer/commits"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/GamerJagdish/simple-url-replacer?style=flat-square"></a>
-  <a href="https://github.com/GamerJagdish/simple-url-replacer/stargazers"><img alt="Stargazers" src="https://img.shields.io/github/stars/GamerJagdish/simple-url-replacer?style=flat-square"></a>
-  <a href="LICENSE"><img alt="License: GPLv3" src="https://img.shields.io/github/license/GamerJagdish/simple-url-replacer?style=flat-square"></a>
+  <a href="https://github.com/GamerJagdish/simple-url-redirector/releases/latest/"><img alt="Latest Release" src="https://img.shields.io/github/v/release/GamerJagdish/simple-url-redirector?display_name=release&style=flat-square"></a>
+  <a href="https://github.com/GamerJagdish/simple-url-redirector/commits"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/GamerJagdish/simple-url-redirector?style=flat-square"></a>
+  <a href="https://github.com/GamerJagdish/simple-url-redirector/stargazers"><img alt="Stargazers" src="https://img.shields.io/github/stars/GamerJagdish/simple-url-redirector?style=flat-square"></a>
+  <a href="LICENSE"><img alt="License: GPLv3" src="https://img.shields.io/github/license/GamerJagdish/simple-url-redirector?style=flat-square"></a>
 </p>
 
 It works two ways at once:
 - Navigation-level redirect via `declarativeNetRequest`: if you click or type a link to a matching URL, your browser redirects you straight to the target URL, preserving the path, query, and fragment.
 - On-page rewriting via a content script: links already displayed on a page get their `href` rewritten too, so hovering, copying, or middle-clicking shows the correct destination.
+
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/simple-url-redirector-screenshot.png" alt="Simple URL Redirector popup and rule editor" width="400" />
+  <img src="screenshots/simple-url-redirector-full-view-screenshot.png" alt="Simple URL Redirector full view" width="800" />
+</p>
 
 ## Installation
 
@@ -37,11 +44,11 @@ You can install the extension directly from the [Firefox Browser Add-ons Store](
 ### Manual Installation (Chrome, Chromium-based browsers)
 
 1. Click download below to get the zip file.
-2. [![Simple URL Redirector](https://img.shields.io/github/release/gamerjagdish/simple-url-replacer.svg?maxAge=3600&display_name=release&label=Download%20Extension&labelColor=06599d&color=043b69&style=for-the-badge)](https://github.com/gamerjagdish/simple-url-replacer/releases)
+2. [![Simple URL Redirector](https://img.shields.io/github/release/gamerjagdish/simple-url-redirector.svg?maxAge=3600&display_name=release&label=Download%20Extension&labelColor=06599d&color=043b69&style=for-the-badge)](https://github.com/gamerjagdish/simple-url-redirector/releases)
 3. Unzip this folder somewhere permanent (don't delete it after installing; Chrome loads it from disk).
 4. Open `chrome://extensions` in Chrome.
 5. Turn on Developer mode (top right).
-6. Click Load unpacked and select the `simple-url-replacer` folder.
+6. Click Load unpacked and select the `simple-url-redirector` folder.
 7. Click the extension icon in your toolbar to add and manage rules.
 
 ## Adding a rule
