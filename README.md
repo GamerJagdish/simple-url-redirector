@@ -80,3 +80,7 @@ If you find this project useful, consider supporting:
 <a href="https://www.ko-fi.com/gamerjagdish" target="_blank" title="ko-fi">
   <img src="https://iili.io/qHFVi5Q.md.png" alt="ko-fi-badge" style="width: 304px;">
 </a>
+
+## License
+
+Distributed under the [MIT License](LICENSE).
